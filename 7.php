@@ -11,18 +11,18 @@
         $el                                           = $('*[validate]');
 
 
-    function Validator(el){
-      this.init(el);
+    function Validate(el, format){
+      this.init(el, format);
     }
     
-    Validator.prototype.init                          = function(el){
+    Validate.prototype.init                          = function(el, format){
       this.$el                                        = el;
       this.message                                    = el.getAttribute('validatemessage');
-      this.type                                       = el.getAttribute('validate');
+      this.type                                       = format;
       el.onchange                                     = this.onchange.bind(this);
     };
     
-    Validator.prototype.onchange                      = function(event){
+    Validate.prototype.onchange                      = function(event){
       this.value                                      = this.$el.value;
       if(!this.reg.test(this.value)){
         alert(this.message);
@@ -36,28 +36,28 @@
       child.prototype.ancestor                        = parent.prototype;
     }
   
-    function ValidateDigit(el){
-      this.ancestor.constructor.call(this, el);
+    function ValidateDigit(el, format){
+      this.ancestor.constructor.call(this, el, format);
     }
   
-    function ValidateLength(el){
-      this.ancestor.constructor.call(this, el);
+    function ValidateLength(el, format){
+      this.ancestor.constructor.call(this, el, format);
     }
 
     function ValidateEmail(el){
-      this.ancestor.constructor.call(this, el);
+      this.ancestor.constructor.call(this, el, format);
     }
 
-    extend(Validator, ValidateDigit);
-    extend(Validator, ValidateLength);
-    extend(Validator, ValidateEmail);
+    extend(Validate, ValidateDigit);
+    extend(Validate, ValidateLength);
+    extend(Validate, ValidateEmail);
 
     ValidateDigit.prototype.onchange                  = function(event){
       this.ancestor.onchange.call(this, event);
     };
 
-    ValidateDigit.prototype.init                      = function(el){
-      this.ancestor.init.call(this, el);
+    ValidateDigit.prototype.init                      = function(el, format){
+      this.ancestor.init.call(this, el, format);
       this.reg                                        = /^\d+$/;
     };
 
@@ -65,8 +65,8 @@
       this.ancestor.onchange.call(this, event);
     };
 
-    ValidateLength.prototype.init                     = function(el){
-      this.ancestor.init.call(this, el);
+    ValidateLength.prototype.init                     = function(el, format){
+      this.ancestor.init.call(this, el, format);
       var data                                        = this.type.split('-');
       this.reg                                        = new RegExp('^.{0,' + data[2] + '}$');
     };
@@ -75,22 +75,26 @@
       this.ancestor.onchange.call(this, event);
     };
 
-    ValidateEmail.prototype.init                      = function(el){
-      this.ancestor.init.call(this, el);
+    ValidateEmail.prototype.init                      = function(el, format){
+      this.ancestor.init.call(this, el, format);
       this.reg                                        = /^[^@]+@.+?\.[a-z]{2,}$/i;
     };
 
-    $el.map(function(el){
-      switch(test = el.getAttribute('validate')){
+    function Validator(el){
+      switch(format = el.getAttribute('validate')){
         case 'digits':
-        new ValidateDigit(el);
+        new ValidateDigit(el, format);
         break;
         case 'email':
-        new ValidateEmail(el);
+        new ValidateEmail(el, format);
         break;
         default:
-        new ValidateLength(el);
+        new ValidateLength(el, format);
       }
+    }
+
+    $el.map(function(el){
+      new Validator(el);
     });
     
   };
