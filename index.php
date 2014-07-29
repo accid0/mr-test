@@ -1,8 +1,6 @@
 <?php
 namespace Application;
 use SQLite3;
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 function o($str, $base = 10){
   $numbers                  = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   $result                   = 0;
@@ -256,64 +254,3 @@ SELECT COUNT(p.id) as ct, p.id
   GROUP BY p.id
   HAVING ct > 5;
 */
-?>
-<!DOCTYPE HTML>
-<html>
-  <head>
-  <script type="text/javascript">
-  document.addEventListener("DOMContentLoaded", init, false);
-  function init(){
-    var $                             = function(sel){
-        	var res 				            = document.querySelectorAll(sel);
-        	return Array.prototype.slice.call(res);
-    	  },
-        $el                           = $('*[validate]');
-
-
-    function Validator(el){
-      this.init(el);
-    }
-    
-    Validator.prototype.init          = function(){
-      this.$el                        = el;
-      this.message                    = el.getAttribute('message');
-      this.type                       = el.getAttribute('validate');
-      this.method                     = this.type.split('-')[0];
-      el.onchange                     = this['validate_' + this.method];
-    };
-  
-    Validator.prototype.validate_digits               = function(event){
-      var val                                         = this.value;
-      event.preventDefault();
-    };
-    Validator.prototype.validate_email                = function(event){
-      var val                                         = this.value;
-      event.preventDefault();
-    };
-    Validator.prototype.validate_length               = function(event){
-      var val                                         = this.value;
-      event.preventDefault();
-    };
-
-    $el.map(function(el){
-		  new Validator(el);
-    });
-    
-  };
-  </script>
-  </head>
-  <body>
-  <div>
-    <input id="first" type="text" validate='digits' validate­message='Digits only'>
-  </div>
-  <div>
-    <input id="second" type="text" validate='email' validate­message='Invalid email'>
-  </div>
-  <div>
-    <textarea validate='length­ma' validate­message='Max 10 symbols'></textarea>
-  </div>
-  <div>
-    <input type="text" validate='digits' validate­message='Digits only'>
-  </div>
-  </body>
-</html>
